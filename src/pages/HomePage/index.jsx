@@ -4,21 +4,40 @@ import { Form, InputGroup } from "react-bootstrap";
 import { CityWeatherCard } from "../../components/CityWeatherCard";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { WeatherDetail } from "../WeatherDetail";
 
 export const HomePage = () => {
   const navigate = useNavigate();
   const [cityValue, setCityValue] = useState();
-  const weatherCards = [
+  const weatherData = [
     {
       id: "1",
       image: "holder.js/100px180?text=Image cap",
-      title: "Weather Summary",
-      city: "-City",
-      temp: "-Current temp",
-      lowTemp: "-Low temp",
-      highTemp: "-High temp",
-      humidity: "-Humidity",
+      title: "New York",
+      city: "New York",
+      temp: "82º",
+      lowTemp: "78º",
+      highTemp: "87º",
+      humidity: "48%",
+    },
+    {
+      id: "2",
+      image: "holder.js/100px180?text=Image cap",
+      title: "San Francisco",
+      city: "San Francisco",
+      temp: "73º",
+      lowTemp: "73º",
+      highTemp: "73º",
+      humidity: "43%",
+    },
+    {
+      id: "3",
+      image: "holder.js/100px180?text=Image cap",
+      title: "Austin",
+      city: "Austin",
+      temp: "84º",
+      lowTemp: "82º",
+      highTemp: "87º",
+      humidity: "70%",
     },
   ];
 
@@ -48,7 +67,7 @@ export const HomePage = () => {
       </div>
 
       <div className="weather-cards-wrap">
-        {weatherCards.map((card) => {
+        {weatherData.map((card) => {
           return (
             <div
               key={card.id}
