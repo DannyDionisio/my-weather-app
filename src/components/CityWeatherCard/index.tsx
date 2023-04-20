@@ -1,8 +1,10 @@
+import { FaCloud, FaCloudRain, FaSun } from "react-icons/fa";
 import "./style.css";
-import { Card, ListGroup } from "react-bootstrap";
+import { Card, ListGroup, Spinner } from "react-bootstrap";
 
 export interface WeatherCardProps {
-  // image: string;
+  weather: string;
+  loading?: boolean;
   name: string;
   temperature: number;
   temperatureMin: number;
@@ -10,19 +12,41 @@ export interface WeatherCardProps {
   humidity: number;
 }
 
+const weatherIcon = {
+  Clouds: <FaCloud size={50} />,
+  Clear: <FaSun size={50} />,
+  Rain: <FaCloudRain size={50} />,
+};
+
 export const CityWeatherCard = (props: WeatherCardProps) => {
-  return (
+  return props.loading ? (
     <Card className="city-weather-card">
-      <Card.Title>{props.name}</Card.Title>
+      <Spinner animation="border" role="status" size="sm">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    </Card>
+  ) : (
+    <Card className="city-weather-card">
+      <Card.Header>{props.name}</Card.Header>
 
       <Card.Body className="card-body">
-        {/* <Card.Img variant="top" src={props.image} /> */}
+        <ListGroup className="list-group-flush weather-temp">
+          <ListGroup.Item>
+            {props.temperature.toFixed(0) + " ºC"}
+          </ListGroup.Item>
+          {weatherIcon[props.weather]}
+        </ListGroup>
 
-        <ListGroup className="list-group-flush">
-          <ListGroup.Item>{props.temperature}</ListGroup.Item>
-          <ListGroup.Item>{props.temperatureMin}</ListGroup.Item>
-          <ListGroup.Item>{props.temperatureMax}</ListGroup.Item>
-          <ListGroup.Item>{props.humidity}</ListGroup.Item>
+        <ListGroup variant="flush">
+          <ListGroup.Item>
+            Low: {props.temperatureMin.toFixed(0) + " ºC"}
+          </ListGroup.Item>
+          <ListGroup.Item>
+            High: {props.temperatureMax.toFixed(0) + " ºC"}
+          </ListGroup.Item>
+          <ListGroup.Item>
+            Humidity: {props.humidity.toFixed(0) + " %"}
+          </ListGroup.Item>
         </ListGroup>
       </Card.Body>
     </Card>

@@ -1,10 +1,10 @@
 .city-weather-detail {
   display: flex;
   flex-direction: column;
-  width: 18rem;
   border: 2px solid #fff;
   padding: 5px;
-  background-color: #8510ef;
+  background-color: #b7bdc3;
+  border-radius: 5px;
 }
 
 .card-body {

@@ -10,4 +10,11 @@
 .card-body {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
+}
+
+.weather-temp {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
 }

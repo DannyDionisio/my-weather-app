@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-interface CityWeather {
+export interface CityWeather {
   id: number;
   name: string;
   main: {
@@ -17,7 +17,7 @@ interface CityWeather {
   };
   weather: [
     {
-      icon: string;
+      main: string;
     }
   ];
 }
@@ -26,28 +26,30 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const [city, setCity] = useState("");
   const [weatherList, setWeatherList] = useState<CityWeather[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get(
-        `http://api.openweathermap.org/data/2.5/group?id=524901,703448,2643743&units;=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
+        `http://api.openweathermap.org/data/2.5/group?id=524901,703448,2643743&units=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
       )
       .then((res) => {
         setWeatherList(res.data.list);
+        setIsLoading(false);
       });
   }, []);
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter") {
       setCity("");
       axios
         .get(
-          `http://api.openweathermap.org/data/2.5/weather?q=${city}&units;=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
+          `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
         )
         .then((res) => {
           setWeatherList(weatherList.concat(res.data));
-          console.log(res);
-        });
+        })
+        .catch((error) => window.alert("City not found."));
     }
   };
 
@@ -79,6 +81,8 @@ export const HomePage = () => {
               onClick={() => openWeatherDetail(cityWeather.id)}
             >
               <CityWeatherCard
+                weather={cityWeather.weather[0].main}
+                loading={isLoading}
                 name={cityWeather.name}
                 temperature={cityWeather.main.temp}
                 temperatureMax={cityWeather.main.temp_max}
