@@ -4,7 +4,9 @@ import { Form, InputGroup } from "react-bootstrap";
 import { CityWeatherCard } from "../../components/CityWeatherCard";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getCities, getCity } from "../../features/weather/weatherSlice";
+import { AnyAction } from "@reduxjs/toolkit";
 
 export interface CityWeather {
   id: number;
@@ -23,33 +25,21 @@ export interface CityWeather {
 }
 
 export const HomePage = () => {
+  const dispatch = useAppDispatch();
+  const weatherList = useAppSelector((state) => state.weather.cities);
+  const loading = useAppSelector((state) => state.weather.loading);
+
   const navigate = useNavigate();
   const [city, setCity] = useState("");
-  const [weatherList, setWeatherList] = useState<CityWeather[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(
-        `http://api.openweathermap.org/data/2.5/group?id=524901,703448,2643743&units=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
-      )
-      .then((res) => {
-        setWeatherList(res.data.list);
-        setIsLoading(false);
-      });
-  }, []);
+    dispatch(getCities() as any as AnyAction);
+  }, [dispatch]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter") {
+      dispatch(getCity(city) as any as AnyAction);
       setCity("");
-      axios
-        .get(
-          `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
-        )
-        .then((res) => {
-          setWeatherList(weatherList.concat(res.data));
-        })
-        .catch((error) => window.alert("City not found."));
     }
   };
 
@@ -82,7 +72,7 @@ export const HomePage = () => {
             >
               <CityWeatherCard
                 weather={cityWeather.weather[0].main}
-                loading={isLoading}
+                loading={loading}
                 name={cityWeather.name}
                 temperature={cityWeather.main.temp}
                 temperatureMax={cityWeather.main.temp_max}

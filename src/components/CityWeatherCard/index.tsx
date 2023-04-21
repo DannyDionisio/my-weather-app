@@ -1,4 +1,4 @@
-import { FaCloud, FaCloudRain, FaSun } from "react-icons/fa";
+import { FaCloud, FaCloudMeatball, FaCloudRain, FaSun } from "react-icons/fa";
 import "./style.css";
 import { Card, ListGroup, Spinner } from "react-bootstrap";
 
@@ -16,6 +16,7 @@ const weatherIcon = {
   Clouds: <FaCloud size={50} />,
   Clear: <FaSun size={50} />,
   Rain: <FaCloudRain size={50} />,
+  Snow: <FaCloudMeatball size={50} />,
 };
 
 export const CityWeatherCard = (props: WeatherCardProps) => {

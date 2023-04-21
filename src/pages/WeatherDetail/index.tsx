@@ -2,31 +2,26 @@ import { useParams } from "react-router-dom";
 import { CityWeatherCard } from "../../components/CityWeatherCard";
 import "./style.css";
 import { Card, ListGroup, Spinner } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { CityWeather } from "../HomePage";
+import { useEffect } from "react";
+import { getCityDetail } from "../../features/weather/weatherSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { AnyAction } from "@reduxjs/toolkit";
 
 export const WeatherDetail = () => {
+  const dispatch = useAppDispatch();
   let { id } = useParams();
-  const [city, setCity] = useState<CityWeather>();
-  const [isLoading, setIsLoading] = useState(true);
+  const city = useAppSelector((state) => state.weather.city);
+  const loading = useAppSelector((state) => state.weather.loading);
 
   useEffect(() => {
-    axios
-      .get(
-        `https://api.openweathermap.org/data/2.5/weather?id=${id}&units=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
-      )
-      .then((res) => {
-        setCity(res.data);
-        setIsLoading(false);
-      });
+    dispatch(getCityDetail(id) as any as AnyAction);
   }, [id]);
 
   return (
     <Card className="city-weather-detail">
       <Card.Title>Weather Details</Card.Title>
 
-      {isLoading ? (
+      {loading || !city ? (
         <Card className="city-weather-card">
           <Spinner animation="border" role="status" size="sm">
             <span className="visually-hidden">Loading...</span>
