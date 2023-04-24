@@ -6,8 +6,3 @@
   background-color: #b7bdc3;
   border-radius: 5px;
 }
-
-.card-body {
-  display: flex;
-  flex-direction: row;
-}

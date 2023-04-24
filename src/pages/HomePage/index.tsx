@@ -9,6 +9,10 @@ import { getCities, getCity } from "../../features/weather/weatherSlice";
 import { AnyAction } from "@reduxjs/toolkit";
 
 export interface CityWeather {
+  coord: {
+    lat: number;
+    lon: number;
+  };
   id: number;
   name: string;
   main: {
@@ -25,12 +29,17 @@ export interface CityWeather {
 }
 
 export const HomePage = () => {
+  const [isFahrenheit, setIsFahrenheit] = useState(false);
   const dispatch = useAppDispatch();
   const weatherList = useAppSelector((state) => state.weather.cities);
   const loading = useAppSelector((state) => state.weather.loading);
 
   const navigate = useNavigate();
   const [city, setCity] = useState("");
+
+  const handleSwitch = (e) => {
+    setIsFahrenheit(!isFahrenheit);
+  };
 
   useEffect(() => {
     dispatch(getCities() as any as AnyAction);
@@ -63,6 +72,14 @@ export const HomePage = () => {
         </InputGroup>
       </div>
 
+      <Form>
+        <Form.Check // prettier-ignore
+          type="switch"
+          id="custom-switch"
+          label="Switch ºF to ºC"
+          onClick={handleSwitch}
+        />
+      </Form>
       <div className="weather-cards-wrap">
         {weatherList.map((cityWeather) => {
           return (
@@ -71,10 +88,14 @@ export const HomePage = () => {
               onClick={() => openWeatherDetail(cityWeather.id)}
             >
               <CityWeatherCard
+                lat={cityWeather.coord.lat}
+                lon={cityWeather.coord.lon}
+                id={cityWeather.id}
                 weather={cityWeather.weather[0].main}
                 loading={loading}
                 name={cityWeather.name}
                 temperature={cityWeather.main.temp}
+                isFahrenheit={isFahrenheit}
                 temperatureMax={cityWeather.main.temp_max}
                 temperatureMin={cityWeather.main.temp_min}
                 humidity={cityWeather.main.humidity}
